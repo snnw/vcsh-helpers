@@ -1,0 +1,10 @@
+#!/bin/bash
+
+for i in $HOME/.config/mr/available.d/*; do
+    filename=$(basename $i)
+    enabled="          "
+    if [[ -e "$HOME/.config/mr/config.d/$filename" ]]; then
+        enabled="(enabled) "
+    fi
+    echo "${enabled}"${filename%.*}
+done

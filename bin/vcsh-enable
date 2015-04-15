@@ -1,0 +1,15 @@
+#!/bin/bash
+
+repo=$1
+
+if [[ ! -e $HOME/.config/mr/available.d/${repo}.vcsh ]]; then
+    echo "Not an available repository: $repo"
+    exit 1
+fi
+
+if [[ -e $HOME/.config/mr/config.d/${repo}.vcsh ]]; then
+    echo "Repository $repo is already enabled"
+    exit 1
+fi
+
+ln -s ../available.d/${repo}.vcsh $HOME/.config/mr/config.d/
