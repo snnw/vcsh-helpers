@@ -8,8 +8,8 @@ vcsh init $name
 vcsh run $name hub create $name -d "$desc"
 
 cat > $HOME/.config/mr/available.d/${name}.vcsh << EOF
-[$HOME/.config/vcsh/repo.d/$name.git]
-checkout = vcsh clone github@github.com:snnw/${name}.git $name
+[\$HOME/.config/vcsh/repo.d/${name}.git]
+checkout = vcsh clone git@github.com:snnw/${name}.git $name
 EOF
 
 vcsh mr add -f ~/.config/mr/available.d/${name}.vcsh
