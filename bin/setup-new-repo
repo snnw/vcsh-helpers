@@ -1,0 +1,18 @@
+#!/bin/bash
+
+name=$1
+desc=${2:-Repository for ${name}}
+
+vcsh init $name
+vcsh $name
+
+hub create $name -d $desc
+
+cat > $HOME/.config/mr/available.d/${name}.vcsh << EOF
+[$HOME/.config/vcsh/repo.d/$name.git]
+checkout = vcsh clone github@github.com:snnw/${name}.git $name
+EOF
+
+vcsh mr add ~/.config/mr/available.d/${name}.vcsh
+vcsh mr commit -m "added configuration for repo ${name}"
+ln -s ../available.d/${name}.vcsh $HOME/.config/mr/config.d
