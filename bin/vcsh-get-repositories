@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if true; then
+  cat $HOME/.config/mr/config.d/*
+fi

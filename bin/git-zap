@@ -1,0 +1,54 @@
+#!/bin/bash
+
+current_branch=`git rev-parse --abbrev-ref HEAD`
+PUSH=
+BRANCH=master
+UPSTREAM=upstream
+
+while [[ $# > 1 ]]
+do
+key = "$1"
+
+case $key in
+    -b|--branch)
+    BRANCH="$2"
+    shift 2
+    ;;
+    -p|--push)
+    PUSH=1
+    shift 2
+    ;;
+    -u|--upstream)
+    UPSTREAM="$2"
+    shift 2
+    ;;
+    *)
+    echo Moron.
+    exit 1
+    ;;
+esac
+done
+
+if [[ $current_branch == HEAD ]]; then
+    echo "Detached head..."
+    exit 1
+fi
+
+if ! git config remote.$UPSTREAM.url >/dev/null; then
+	# skip silently
+	exit 0
+fi
+
+# fetch upstream commits and merge those into master
+git fetch $UPSTREAM || { >&2 echo "Failed to fetch $UPSTREAM."; exit 1; }
+git checkout $BRANCH || { >&2 echo "Failed to checkout $BRANCH"; exit 1; }
+[[ $PUSH ]] && { git pull || { >&2 echo "Failed to pull $BRANCH."; exit 1; } }
+git merge $UPSTREAM/$BRANCH || { >&2 echo "Failed to merge $UPSTREAM/$BRANCH into $BRANCH"; exit 1; }
+
+[[ $PUSH ]] && { git push || { >&2 echo "Failed to push $BRANCH to $(git rev-parse --symbolic-full-name --abbrev-ref master@\{u\})" && exit 1; } }
+
+# update the current branch
+git checkout $current_branch || { >&2 echo "Failed to return to $current_branch"; exit 1; }
+git merge $BRANCH || { >&2 echo "Failed to merge $BRANCH into $current_branch"; exit 1; }
+
+[[ $PUSH ]] && { git push || { >&2 echo "Failed to push $current_branch to $(git rev-parse --symbolic-full-name --abbrev-ref master@\{u\})" && exit 1; } }
