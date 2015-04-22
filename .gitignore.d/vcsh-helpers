@@ -1,0 +1,7 @@
+*
+!/.gitignore.d
+!/.gitignore.d/vcsh-helpers
+!/bin
+!/bin/vcsh-enable
+!/bin/vcsh-list-available
+!/bin/vcsh-new-github
