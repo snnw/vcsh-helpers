@@ -14,4 +14,5 @@ EOF
 
 vcsh mr add -f ~/.config/mr/available.d/${name}.vcsh
 vcsh mr commit -m "added configuration for repo ${name}"
+vcsh mr push
 ln -s ../available.d/${name}.vcsh $HOME/.config/mr/config.d
